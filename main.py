@@ -70,13 +70,13 @@ def init_params_xavier():
 def forward_prop(W1, b1, W2, b2, W3, b3, W4, b4, W5, b5, X):
     """Forward prop: Ocultas=Sigmoid, Saída=Softmax."""
     Z1 = W1.dot(X) + b1
-    A1 = sigmoid(Z1)  # Pedido
+    A1 = sigmoid(Z1)  
     Z2 = W2.dot(A1) + b2
-    A2 = sigmoid(Z2)  # Pedido
+    A2 = sigmoid(Z2)  
     Z3 = W3.dot(A2) + b3
-    A3 = sigmoid(Z3)  # Pedido
+    A3 = sigmoid(Z3)  
     Z4 = W4.dot(A3) + b4
-    A4 = sigmoid(Z4)  # Pedido
+    A4 = sigmoid(Z4)  
     # Camada de saída (Softmax)
     Z5 = W5.dot(A4) + b5
     A5 = softmax(Z5)
@@ -90,14 +90,14 @@ def back_prop(Z1, A1, Z2, A2, Z3, A3, Z4, A4, Z5, A5, W1, W2, W3, W4, W5, X, Y):
 
     # 1. Camada de Saída (L5)
     # Derivada de (Softmax + Cross-Entropy)
-    dZ5 = A5 - one_hot_Y  # <-- O ponto que "funciona"
+    dZ5 = A5 - one_hot_Y  
 
     dW5 = (1 / m) * dZ5.dot(A4.T)
     db5 = (1 / m) * np.sum(dZ5, axis=1, keepdims=True)
 
     # 2. Camada Oculta 4 (L4)
     dA4 = W5.T.dot(dZ5)
-    dZ4 = dA4 * sigmoid_deriv(A4)  # <- Derivada do Sigmoid, como pedido
+    dZ4 = dA4 * sigmoid_deriv(A4)  # <- Derivada do Sigmoid
     dW4 = (1 / m) * dZ4.dot(A3.T)
     db4 = (1 / m) * np.sum(dZ4, axis=1, keepdims=True)
 
@@ -150,7 +150,7 @@ def get_accuracy(predictions, Y):
 
 
 # --- 5. Loop de Treinamento ---
-def gradient_descent(X, Y, learning_rate=0.1, iterations=5000):
+def gradient_descent(X, Y, learning_rate=0.1, iterations=2500):
     params = init_params_xavier()
     W1, b1, W2, b2, W3, b3, W4, b4, W5, b5 = params
     Y_one_hot = one_hot(Y)
@@ -168,7 +168,7 @@ def gradient_descent(X, Y, learning_rate=0.1, iterations=5000):
             accuracy = get_accuracy(predictions, Y)
 
             print(f"Época: {i}")
-            print(f"Erro Quadrático Médio (MSE): {mse:.6f}")  # Pedido
+            print(f"Erro Quadrático Médio (MSE): {mse:.6f}")  # MSE
             print(f"Acurácia: {accuracy:.4f}")  # Realidade
             print("-" * 20)
 
@@ -188,8 +188,7 @@ try:
     X_test, Y_test = load_mnist_gz(test_img_path, test_lbl_path)
 
     print("\nIniciando treinamento...")
-    # Com Softmax, um LR menor é mais estável
-    trained_params = gradient_descent(X_train, Y_train, learning_rate=0.5, iterations=5000)
+    trained_params = gradient_descent(X_train, Y_train, learning_rate=0.5, iterations=2500)
     print("Treinamento concluído.")
 
     W1, b1, W2, b2, W3, b3, W4, b4, W5, b5 = trained_params
